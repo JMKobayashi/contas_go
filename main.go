@@ -1,37 +1,24 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-type ContaCorrente struct {
-	titular       string
-	numeroAgencia int
-	numeroConta   int
-	saldo         float64
-}
+	"github.com/contas_go/clientes"
+	"github.com/contas_go/contas"
+)
 
-func (c *ContaCorrente) Sacar(valorDoSaque float64) string {
-	podeSacar := valorDoSaque <= c.saldo && valorDoSaque > 0
-
-	if podeSacar {
-		c.saldo -= valorDoSaque
-		return "Saque realizado com sucesso"
-	} else {
-		return "Saldo insuficiente"
-	}
-}
-
-func (c *ContaCorrente) Depositar(valorDoDeposito float64) (string, float64) {
-	if valorDoDeposito > 0 {
-		c.saldo += valorDoDeposito
-		return "Deposito realizado com sucesso", c.saldo
-	} else {
-		return "Valor do deposito inválido", c.saldo
-	}
-
-}
 func main() {
-	contaDoJames := ContaCorrente{"James", 123, 123456, 153.54}
+	contaDoJames := contas.ContaCorrente{Titular: clientes.Titular{
+		Nome:      "James",
+		CPF:       "390.390.390-90",
+		Profissao: "Desenvolvedor",
+	}, NumeroAgencia: 123, NumeroConta: 123456}
+	contaDoJames.Depositar(1000)
 
-	retorno, saldo := contaDoJames.Depositar(1000)
-	fmt.Println(retorno, saldo)
+	clienteMarjorie := clientes.Titular{Nome: "Marjorie", CPF: "123.456.789-10", Profissao: "Projetista"}
+
+	contaDaMarjorie := contas.ContaCorrente{Titular: clienteMarjorie, NumeroAgencia: 123, NumeroConta: 12345}
+	contaDaMarjorie.Depositar(1500)
+
+	fmt.Println(contaDoJames, contaDaMarjorie)
 }
